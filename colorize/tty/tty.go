@@ -3,7 +3,7 @@ package tty
 import (
 	"fmt"
 
-	"github.com/popmedic/go-logger/log/colorize"
+	"github.com/popmedic/go-color/colorize"
 )
 
 // TTY is an int holding number escape value for a color on the terminal.
