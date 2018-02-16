@@ -5,12 +5,10 @@ import (
 )
 
 type IColorize interface {
+	Color(string) string
 	Start() string
 	End() string
-	Get() IColorize
-	Set(IColorize)
 	Add(...IColorize) IColorize
-	Dup() IColorize
 }
 
 type Colorize struct {
@@ -28,30 +26,8 @@ func NewColorize(start, end string, colorize ...IColorize) IColorize {
 	return n.Add(colorize...)
 }
 
-func (cc *Colorize) Start() string {
-	cc.lock.RLock()
-	defer cc.lock.RUnlock()
-
-	return cc.start
-}
-
-func (cc *Colorize) End() string {
-	cc.lock.RLock()
-	defer cc.lock.RUnlock()
-
-	return cc.end
-}
-
-func (cc *Colorize) Get() IColorize {
-	return cc.Dup()
-}
-
-func (cc *Colorize) Set(colorize IColorize) {
-	cc.lock.Lock()
-	defer cc.lock.Unlock()
-
-	cc.start = colorize.Start()
-	cc.end = colorize.End()
+func (cc *Colorize) Color(s string) string {
+	return cc.start + s + cc.end
 }
 
 func (cc *Colorize) Add(colorize ...IColorize) IColorize {
@@ -70,6 +46,16 @@ func (cc *Colorize) Add(colorize ...IColorize) IColorize {
 	return cc
 }
 
-func (cc *Colorize) Dup() IColorize {
-	return NewColorize(cc.Start(), cc.End())
+func (cc *Colorize) Start() string {
+	cc.lock.RLock()
+	defer cc.lock.RUnlock()
+
+	return cc.start
+}
+
+func (cc *Colorize) End() string {
+	cc.lock.RLock()
+	defer cc.lock.RUnlock()
+
+	return cc.end
 }
